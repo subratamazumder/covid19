@@ -21,7 +21,7 @@ Get all country code & latest covid19 status corresponding to that country
 ##### 3.2 /covid19/countries/`{countryCd}`/latest
 Get latest covid19 status for a country
 
-##### 3.3 /covid19/countries/`{countryCd}`/{date}
+##### 3.3 /covid19/countries/`{countryCd}`/`{date}`
 
 Get latest covid19 status for a country on a given date
 
@@ -30,3 +30,5 @@ Get latest covid19 status for a country on a given date
 
 
 ![Design](covid19-design.svg)
+
+### NOTE : Data to this API is supplied by public data managed by [Johns Hopkins CSSE](https://systems.jhu.edu/research/public-health/ncov/)
