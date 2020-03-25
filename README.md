@@ -12,7 +12,18 @@ Every 6 hours via Cloud Watch Alarm this Lambda will be triggred. Once triggred 
 This lambda gets triggered as soon a new data file gets loaded on S3. Once triggred it will read CSV data file and load incremental data by date to DynamoDB
 
 #### 3. Data Viewer
-This lambda reads data from DynamoDB table and supply data to s3 static website.
+This lambda reads data from DynamoDB table and supply data to s3 static website via API Gateway.
+
+##### 3.1 /covid19/countries/latest
+
+Get all country code & latest covid19 status corresponding to that country
+
+##### 3.2 /covid19/countries/`{countryCd}`/latest
+Get latest covid19 status for a country
+
+##### 3.3 /covid19/countries/`{countryCd}`/{date}
+
+Get latest covid19 status for a country on a given date
 
 #### 4. Static S3 Website
  This react based component just to visualise data.
