@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  covid19-data-retriever-function
+
+  Sample SAM Template for covid19-data-retriever-function
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  COVID19DataRetrieverFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: covid19-data-retriever-function
+      Description: covid19-data-retriever-function
+      CodeUri: lambda_code/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Layers:
+        - !Join
+          - ''
+          - - 'arn:aws:lambda:'
+            - !Ref 'AWS::Region'
+            - ':'
+            - !Ref 'AWS::AccountId'
+            - ':layer:request-layer-python:1'
+        - !Join
+          - ''
+          - - 'arn:aws:lambda:'
+            - !Ref 'AWS::Region'
+            - ':'
+            - !Ref 'AWS::AccountId'
+            - ':layer:xray-layer-python:1'
+      MemorySize: 512
+      Timeout: 5
+      AutoPublishAlias: live
+      Tracing: Active
+      ReservedConcurrentExecutions: 10
+      Environment:
+        Variables:
+          AWS_XRAY_TRACING_NAME: covid19-data-retriever-function
+          COVD19_DATA_BUCKET: dev-test-covid19-data
+          COVD19_DATA_SROUCE_BASE_URL: https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/
+          COVD19_DATA_FILE_CONFIRMED: time_series_covid19_confirmed_global.csv
+          COVD19_DATA_FILE_DEATHS: time_series_covid19_deaths_global.csv
+          COVD19_DATA_FILE_RECOVERED: time_series_covid19_recovered_global.csv 
+      Policies:
+        - AWSLambdaExecute
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:PutObjectAcl
+                - s3:GetObject
+                - s3:GetObjectAcl
+                - s3:DeleteObject
+              Resource: 'arn:aws:s3:::dev-test-covid19-data/*'
+      Tags: 
+        NameTag: covid19-data-function
+        ConsumerAppTag: Cloud Watch Alarm
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  COVID19DataRetrieverFunction:
+    Description: "covid19-data-retriever-function ARN"
+    Value: !GetAtt COVID19DataRetrieverFunction.Arn
+  COVID19DataRetrieverFunctionIamRole:
+    Description: "Implicit IAM Role created for covid19-data-retriever-function"
+    Value: !GetAtt COVID19DataRetrieverFunctionRole.Arn
