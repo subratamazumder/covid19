@@ -1,4 +1,4 @@
-export STACK_NAME=lambda-covid19-data-retriever-function-stack
+export STACK_NAME=lambda-covid19-data-loader-function-stack
 export S3_CLI_BUCKET_NAME=dev-test-sam-cli
 export AWS_CLI_PROFILE=devtest
 export AWS_DEFAULT_REGION=ap-south-1

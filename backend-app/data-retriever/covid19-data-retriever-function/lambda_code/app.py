@@ -46,7 +46,7 @@ def lambda_handler(event, context):
         retrieve_covid19_data(COVD19_DATA_FILE_CONFIRMED)
         retrieve_covid19_data(COVD19_DATA_FILE_DEATHS)
         retrieve_covid19_data(COVD19_DATA_FILE_RECOVERED)
-        return "All covid19 data store successfully"
+        return "All covid19 data loaded to S3 successfully"
     except Exception as e:
         logger.info(e)
         logger.info(traceback.print_exc())

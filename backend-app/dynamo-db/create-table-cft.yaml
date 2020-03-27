@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters: 
+  TableName: 
+    Type: String
+    Description: Enter table name
+Resources: 
+  myDynamoDBTable: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "country"
+          AttributeType: "S"
+        - 
+          AttributeName: "total_hit"
+          AttributeType: "N"
+      KeySchema: 
+        - 
+          AttributeName: "country"
+          KeyType: "HASH"
+        - 
+          AttributeName: "total_hit"
+          KeyType: "RANGE"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: !Ref TableName
+      Tags:
+        -
+          Key: 'Name'
+          Value: 'Covid19 Data Store'
+        -
+          Key: 'ConsumerApp'
+          Value: 'covid19-data-loader-function'
+
+         
