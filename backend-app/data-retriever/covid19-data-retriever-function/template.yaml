@@ -8,7 +8,7 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
-    Timeout: 3
+    Timeout: 15
 
 Resources:
   COVID19DataRetrieverFunction:
@@ -35,7 +35,7 @@ Resources:
             - !Ref 'AWS::AccountId'
             - ':layer:xray-layer-python:1'
       MemorySize: 512
-      Timeout: 5
+      Timeout: 15
       AutoPublishAlias: live
       Tracing: Active
       ReservedConcurrentExecutions: 10
