@@ -59,8 +59,17 @@ Resources:
                 - s3:GetObjectAcl
                 - s3:DeleteObject
               Resource: 'arn:aws:s3:::dev-test-covid19-data/*'
+      Events:
+        CWSchedule:
+          Type: Schedule
+          Properties:
+            Schedule: 'rate(4 hours)'
+            Name: TestSchedule
+            Description: Triggers covid19-data-retriever-function every 4 hours
+            Enabled: True
+
       Tags: 
-        NameTag: covid19-data-function
+        NameTag: covid19-data-retriever-function
         ConsumerAppTag: Cloud Watch Alarm
 
 Outputs:

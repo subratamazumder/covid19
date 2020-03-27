@@ -78,7 +78,13 @@ Resources:
                     - !Ref 'AWS::Region'
                     - ':'
                     - !Ref 'AWS::AccountId'
-                    - ':table/covid19-stats'             
+                    - ':table/covid19-stats'
+      Events:
+        LoadDataToDynamo:
+          Type: S3
+          Properties:
+            Bucket: dev-test-covid19-data
+            Events: s3:ObjectCreated:*                          
       Tags: 
         NameTag: covid19-data-function
         ConsumerAppTag: S3 Upload Event
