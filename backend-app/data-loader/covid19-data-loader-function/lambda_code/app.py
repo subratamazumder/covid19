@@ -21,14 +21,14 @@ COVD19_DATA_FILE_CONFIRMED = os.environ['COVD19_DATA_FILE_CONFIRMED']
 COVD19_DATA_FILE_DEATHS = os.environ['COVD19_DATA_FILE_DEATHS']
 COVD19_DATA_FILE_RECOVERED = os.environ['COVD19_DATA_FILE_RECOVERED']
 COVD19_DYNAMO_TABLE = os.environ['COVD19_DYNAMO_TABLE']
+TEMP_DOWNLOAD_LOCATION = '/tmp'
+REC_TYPE_DICT = dict([(COVD19_DATA_FILE_CONFIRMED, 'total_confirmed'),(COVD19_DATA_FILE_DEATHS,'total_deaths'),(COVD19_DATA_FILE_RECOVERED,'total_recovered')])
 s3 = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb')
+def get_file_path(file_name):
+    return '{}/{}'.format(TEMP_DOWNLOAD_LOCATION,file_name)
 def download_s3_file(file_name):
-    s3.download_file(COVD19_DATA_BUCKET, file_name, '/tmp/'+file_name)
-def get_file_from_s3(file_name):
-    response = s3.get_object(Bucket=COVD19_DATA_BUCKET, Key=file_name)
-    logger.info("geting {} data from s3 bucket {}".format(file_name, COVD19_DATA_BUCKET))
-    return response['Body'].read().decode('utf-8').split()
+    s3.download_file(COVD19_DATA_BUCKET, file_name, get_file_path(file_name))
 def get_latest(csv_line):
     dates = dict(filter(lambda element: is_date(element[0]), csv_line.items()))
     history = {date: int(amount or 0) for date, amount in dates.items()}
@@ -49,45 +49,70 @@ def is_date(string):
       return False
 """
 Form a dynamo row strcuture as 
-[('country', 'india'),('total_hit',123)]
+[('country', 'india'),( rec_type ,123)]
 """
-def extract_csv_line(csv_line):
-    return dict([('country', csv_line["Country/Region"]),('total_hit',get_latest(csv_line))])
-def write_to_dynamo(csv_lines):
-    for csv_line in csv.DictReader(csv_lines):
-        dynamo_put_item(COVD19_DYNAMO_TABLE,extract_csv_line(csv_line))
-def write_to_dynamo1(file_path):
+def extract_csv_line(csv_line,rec_type):
+    if rec_type == 'total_confirmed':
+        return dict([('country', csv_line["Country/Region"]),('total_confirmed',get_latest(csv_line))])
+    if rec_type == 'total_deaths':
+        return dict([('country', csv_line["Country/Region"]),('total_deaths',get_latest(csv_line))])
+    if rec_type == 'total_recovered':
+        return dict([('country', csv_line["Country/Region"]),('total_recovered',get_latest(csv_line))])
+"""
+Return rec_type as total_confirmed or total_deaths or total_recovered
+"""
+def get_rec_type(file_name):
+    return REC_TYPE_DICT[file_name]
+def prepare_db_record(file_name):
+    db_record = []
     count = 0
+    file_path = get_file_path(file_name)
+    rec_type = get_rec_type(file_name)
     with open(file_path) as csvfile:
         for csv_line in csv.DictReader(csvfile):
             count = count + 1
-            dynamo_put_item(COVD19_DYNAMO_TABLE,extract_csv_line(csv_line))
-    logger.info("Toltal number of record loaded -{}".format(count))
-def dynamo_put_item(table_name,record):
-    logger.info("Puting Dynamo ecord for country-{}".format(record['country']))
-    if record['country'] is not None:
-        dynamo_table = dynamodb.Table(table_name)
-        dynamo_table.put_item(
-                Item={
-                    'country': record['country'],
-                    'total_hit': record['total_hit']
-                }
-            )
-    else:
-        logger.info("Invalid data ignoring record")
+            db_record[extract_csv_line(csv_line,rec_type)]
+    return db_record
+def write_to_dynamo(file_name):
+    count = 0
+    file_path = get_file_path(file_name)
+    rec_type = get_rec_type(file_name)
+    with open(file_path) as csvfile:
+        for csv_line in csv.DictReader(csvfile):
+            count = count + 1
+            # Apend to bigger dictionary
+            dynamo_put_item(COVD19_DYNAMO_TABLE,extract_csv_line(csv_line,rec_type),rec_type)
+            if count == 1:
+                break
+    logger.info("Toltal number of record for -{} loaded is -{}".format(rec_type,count))
+"""
+Fill a big dic with all data and then write it once
+"""
+def dynamo_put_item(table_name,record,rec_type):
+    try:
+        logger.info("Puting Dynamo ecord for country-{} with rec_type-{}".format(record['country'],rec_type))
+        if record['country'] is not None:
+            dynamo_table = dynamodb.Table(table_name)
+            dynamo_table.put_item(
+                    Item=record
+                )
+        else:
+            logger.info("Invalid data ignoring record")
+    except Exception as e:
+        logger.info(e)
+        logger.info(traceback.print_exc())
 def clean_data():
     pass
 def store_covid19_data(file_name):
-    write_to_dynamo(get_file_from_s3(file_name))
-def store_covid19_data1(file_name):
     download_s3_file(file_name)
-    write_to_dynamo1("/tmp/"+file_name)
+    write_to_dynamo(file_name)
+
 def lambda_handler(event, context):
     logger.info("Received event: " + json.dumps(event, indent=2))
     try:
-        store_covid19_data1(COVD19_DATA_FILE_CONFIRMED)
-        # store_covid19_data(COVD19_DATA_FILE_DEATHS)
-        # store_covid19_data(COVD19_DATA_FILE_RECOVERED)
+        store_covid19_data(COVD19_DATA_FILE_CONFIRMED)
+        store_covid19_data(COVD19_DATA_FILE_DEATHS)
+        store_covid19_data(COVD19_DATA_FILE_RECOVERED)
         return "All covid19 data store to DynamoDB successfully"
     except Exception as e:
         logger.info(e)

@@ -11,16 +11,10 @@ Resources:
         - 
           AttributeName: "country"
           AttributeType: "S"
-        - 
-          AttributeName: "total_hit"
-          AttributeType: "N"
       KeySchema: 
         - 
           AttributeName: "country"
           KeyType: "HASH"
-        - 
-          AttributeName: "total_hit"
-          KeyType: "RANGE"
       ProvisionedThroughput: 
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
