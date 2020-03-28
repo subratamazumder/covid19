@@ -1,0 +1,82 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  covid19-data-viewer-function
+
+  Sample SAM Template for covid19-data-viewer-function
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 5
+
+Resources:
+  COVID19DataViewerFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      FunctionName: covid19-data-viewer-function
+      Description: covid19-data-viewer-function
+      CodeUri: lambda_code/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Layers:
+        - !Join
+          - ''
+          - - 'arn:aws:lambda:'
+            - !Ref 'AWS::Region'
+            - ':'
+            - !Ref 'AWS::AccountId'
+            - ':layer:request-layer-python:1'
+        - !Join
+          - ''
+          - - 'arn:aws:lambda:'
+            - !Ref 'AWS::Region'
+            - ':'
+            - !Ref 'AWS::AccountId'
+            - ':layer:xray-layer-python:1'
+      MemorySize: 512
+      Timeout: 5
+      AutoPublishAlias: live
+      Tracing: Active
+      ReservedConcurrentExecutions: 10
+      Environment:
+        Variables:
+          AWS_XRAY_TRACING_NAME: covid19-data-viewer-function
+          COVD19_DYNAMO_TABLE: covid19-stats
+      Policies:
+        - AWSLambdaExecute
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                  - dynamodb:DescribeTable
+                  - dynamodb:GetItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:BatchWriteItem
+                  - dynamodb:BatchGetItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:ConditionCheckItem
+              Resource: !Join
+                  - ''
+                  - - 'arn:aws:dynamodb:'
+                    - !Ref 'AWS::Region'
+                    - ':'
+                    - !Ref 'AWS::AccountId'
+                    - ':table/covid19-stats'                        
+      Tags: 
+        NameTag: covid19-data-viewer-function
+        ConsumerAppTag: API Gateway
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  COVID19DataViewerFunction:
+    Description: "covid19-data-viewer-function ARN"
+    Value: !GetAtt COVID19DataViewerFunction.Arn
+  COVID19DataViewerFunctionIamRole:
+    Description: "Implicit IAM Role created for covid19-data-viewer-function"
+    Value: !GetAtt COVID19DataViewerFunctionRole.Arn

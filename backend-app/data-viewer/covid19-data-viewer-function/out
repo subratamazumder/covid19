@@ -1,0 +1,1 @@
+{"statusCode": "200", "body": "{\n    \"total_deaths\": 1581,\n    \"total_recovered\": 869,\n    \"country\": \"US\",\n    \"total_confirmed\": 101657\n}", "headers": {"Content-Type": "application/json"}}
