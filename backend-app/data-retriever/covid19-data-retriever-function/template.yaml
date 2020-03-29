@@ -64,7 +64,7 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: 'rate(4 hours)'
-            Name: TestSchedule
+            Name: Covid19DataRetrieverSchedule
             Description: Triggers covid19-data-retriever-function every 4 hours
             Enabled: True
 

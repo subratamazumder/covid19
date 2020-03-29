@@ -6,7 +6,6 @@ import Nav from "react-bootstrap/Nav";
 import BrandLogo from "../dp-logo.png";
 import Alert from "react-bootstrap/Alert";
 import Image from "react-bootstrap/Image";
-import "../index.css";
 import Preface from "./preface";
 import Search from "./search";
 class HomePage extends React.Component {
@@ -25,11 +24,11 @@ class HomePage extends React.Component {
               height="30"
               className="d-inline-block align-top"
             />{" "}
-            COVID19 Stats
+            COVID19 Global Stats
           </Navbar.Brand>
           <Nav className="mr-auto"></Nav>
           <Nav></Nav>
-          <Nav.Link href="https://github.com/subratamazumder/notepad">
+          <Nav.Link href="https://github.com/subratamazumder/covid19">
             <Image
               src={GithubLogo}
               alt="Github"
@@ -59,8 +58,7 @@ class HomePage extends React.Component {
               <h5>
                 <i>
                   <q>
-                    This is a stateless application, does not store typed text
-                    to any persistance storage automatically.
+                  Disclaimer : COVID19 Stats sata to this Application is supplied by <a href="https://github.com/CSSEGISandData/COVID-19">public data</a> managed by <a href="https://systems.jhu.edu/research/public-health/ncov/">Johns Hopkins CSSE</a>
                   </q>
                 </i>
               </h5>
