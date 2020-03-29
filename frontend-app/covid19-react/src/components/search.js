@@ -445,7 +445,7 @@ class Search extends React.Component {
       country: "",
       selected: null,
       covid19Stats: null,
-      showGraph: true,
+      showGraph: false,
       totalInfected: 0,
       totalDeath: 0,
       totalRecovered: 0,
