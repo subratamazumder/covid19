@@ -2,7 +2,11 @@ import React from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { Dropdown } from "semantic-ui-react";
 import Graph from "./graph";
-import {API_METERING_ID, API_ENDPONIT_STAT_BY_COUNTRY, COUNTRY_MAP} from './config'
+import {
+  API_METERING_ID,
+  API_ENDPONIT_STAT_BY_COUNTRY,
+  COUNTRY_MAP
+} from "./config";
 class Search extends React.Component {
   constructor(props) {
     console.log("COVID19 constructing");
@@ -16,6 +20,7 @@ class Search extends React.Component {
       totalInfected: 0,
       totalDeath: 0,
       totalRecovered: 0,
+      lastUpdated: "",
       apiResponseCode: 0,
       showApiStatus: false,
       charCount: 0
@@ -56,12 +61,16 @@ class Search extends React.Component {
       totalInfected: 0,
       totalDeath: 0,
       totalRecovered: 0,
+      lastUpdated: "",
       charCount: 0
     });
   };
   searchByCountry = event => {
     console.log("Seraching with country -", this.state.country);
-    const fetchUrl = API_ENDPONIT_STAT_BY_COUNTRY.replace("{COUNTRY}",this.state.country);
+    const fetchUrl = API_ENDPONIT_STAT_BY_COUNTRY.replace(
+      "{COUNTRY}",
+      this.state.country
+    );
     fetch(fetchUrl, {
       headers: {
         Accept: "application/json",
@@ -89,7 +98,8 @@ class Search extends React.Component {
         this.setState({
           totalInfected: jsonObj.total_confirmed,
           totalRecovered: jsonObj.total_recovered,
-          totalDeath: jsonObj.total_deaths
+          totalDeath: jsonObj.total_deaths,
+          lastUpdated: jsonObj.last_updated
         });
         //enable graphs
         console.log("Enbaling covid graph for-", this.state.country);
@@ -168,6 +178,7 @@ class Search extends React.Component {
                   totalInfected={this.state.totalInfected}
                   totalDeath={this.state.totalDeath}
                   totalRecovered={this.state.totalRecovered}
+                  lastUpdated={this.state.lastUpdated}
                 />
               )}
             </div>

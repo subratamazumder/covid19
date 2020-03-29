@@ -39,7 +39,7 @@ class Graph extends React.Component {
         // xref:"container",
         // yref: "container",
         autosize: true,
-        title: "COVID19 Stats For ".concat(this.props.country)
+        title: "COVID19 Stats For ".concat(this.props.country).concat(" updated at ").concat(this.props.lastUpdated)
       },
       useResizeHandler: true,
       style: { width: "100%", height: "100%" }

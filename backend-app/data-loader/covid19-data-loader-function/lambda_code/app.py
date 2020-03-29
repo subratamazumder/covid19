@@ -10,6 +10,7 @@ import requests
 import csv
 from collections import ChainMap
 from dateutil.parser import parse
+from datetime import datetime
 patch_all()
 
 logger = logging.getLogger()
@@ -161,6 +162,8 @@ def dynamo_put_item(table_name, record):
 
 def clean_data():
     pass
+def get_last_updated_ts():
+    return datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 def prepare_db_record(country_list, covid19_all_data):
     dynamo_rec_list = []
     for country in country_list:
@@ -168,7 +171,8 @@ def prepare_db_record(country_list, covid19_all_data):
         ('country', country.upper().replace(' ', '')),
         ('total_confirmed',get_total_confirmed(covid19_all_data,country)),
         ('total_deaths',get_total_deaths(covid19_all_data,country)),
-        ('total_recovered',get_total_recovered(covid19_all_data,country))
+        ('total_recovered',get_total_recovered(covid19_all_data,country)),
+        ('last_updated',get_last_updated_ts())
         ]))
     return dynamo_rec_list
 def store_covid19_data(file_name):
