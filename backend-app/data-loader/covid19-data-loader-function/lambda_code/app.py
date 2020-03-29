@@ -165,7 +165,7 @@ def prepare_db_record(country_list, covid19_all_data):
     dynamo_rec_list = []
     for country in country_list:
         dynamo_rec_list.append(dict([
-        ('country', country),
+        ('country', country.upper().replace(' ', '')),
         ('total_confirmed',get_total_confirmed(covid19_all_data,country)),
         ('total_deaths',get_total_deaths(covid19_all_data,country)),
         ('total_recovered',get_total_recovered(covid19_all_data,country))

@@ -61,7 +61,7 @@ def dynamo_get_item(table_name, country):
         dynamo_table = dynamodb.Table(table_name)
         response = dynamo_table.get_item(
             Key={
-                'country': country
+                'country': country.upper()
             }
         )
     except ClientError as e:
@@ -91,18 +91,32 @@ def dynamo_query_item(table_name, country):
         logger.info(traceback.print_exc())
 
 def respond(err, res=None):
+    # TODO : add 404 handling scnearios
     return {
         'statusCode': '500' if err else '200',
         'body': err if err else json.dumps(res, indent=4, cls=DecimalEncoder),
         'headers': {
             'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods':'GET,OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with',
+            'Access-Control-Allow-Credentials': True
         },
     }
+"""
+path params comes as below dict format
 
+"pathParameters": {
+"country": "India"
+},
+"""
 def lambda_handler(event, context):
     logger.info("Received event: " + json.dumps(event, indent=2))
     try:
-        country = event['country']
+        if 'country' in event:
+            country = event['country']
+        else:
+            country = event['pathParameters']['country']
         return respond(None,fetch_covid19_data(country))
     except Exception as e:
         logger.info(e)

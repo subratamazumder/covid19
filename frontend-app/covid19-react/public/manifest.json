@@ -1,0 +1,10 @@
+{
+  "short_name": "Subrata's Website",
+  "name": "Created using React & Bootstrap",
+  "icons": [
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
