@@ -29,7 +29,7 @@ Get latest covid19 status for a country on a given date
  This react based component just to serch & visualise data.
 
 
-![Design](covid19-design.svg)
+![Design](covid19-design.png)
 
 ### NOTE : Data to this API is supplied by [public data](https://github.com/CSSEGISandData/COVID-19) managed by [Johns Hopkins CSSE](https://systems.jhu.edu/research/public-health/ncov/)
 
