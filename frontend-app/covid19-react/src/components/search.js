@@ -91,7 +91,8 @@ class Search extends React.Component {
         if (res.ok) {
           return res.json();
         }
-        console.log("API invokation is not successful ", res.status);
+        console.log("API invocation is not successful ", res.status);
+        this.setState({ showGraph: false });
         throw new Error(
           "Network response was not ok: "
             .concat(res.status)
