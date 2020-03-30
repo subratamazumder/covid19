@@ -378,7 +378,7 @@ export const COUNTRY_MAP = [
       key: "gb",
       value: "UnitedKingdom",
       flag: "gb",
-      text: "United Kingdom"
+      text: "United Kingdom (UK)"
     },
     { key: "us", value: "US", flag: "us", text: "United States (USA)" },
     { key: "uy", value: "Uruguay", flag: "uy", text: "Uruguay" },
