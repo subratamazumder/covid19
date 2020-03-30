@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, Alert } from "react-bootstrap";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import { Dropdown } from "semantic-ui-react";
 import Plot from "react-plotly.js";
@@ -23,7 +23,9 @@ class Search extends React.Component {
       totalRecovered: 0,
       lastUpdated: "",
       apiResponseCode: 0,
-      showApiStatus: false,
+      showApiStatusSuccess: false,
+      showApiStatusError: false,
+      apiResponseTime: 0,
       charCount: 0,
       graphData: [],
       graphLayout: {},
@@ -62,7 +64,9 @@ class Search extends React.Component {
       selected: "",
       showGraph: false,
       apiResponseCode: 0,
-      showApiStatus: false,
+      showApiStatusSuccess: false,
+      showApiStatusError: false,
+      apiResponseTime: 0,
       totalInfected: 0,
       totalDeath: 0,
       totalRecovered: 0,
@@ -80,6 +84,7 @@ class Search extends React.Component {
       "{COUNTRY}",
       this.state.country
     );
+    const startTime = Date.now();
     fetch(fetchUrl, {
       headers: {
         Accept: "application/json",
@@ -87,12 +92,23 @@ class Search extends React.Component {
       }
     })
       .then(res => {
-        this.setState({ apiResponseCode: res.status, showApiStatus: true });
+        this.setState({
+          apiResponseCode: res.status,
+          apiResponseTime: Date.now() - startTime
+        });
         if (res.ok) {
+          this.setState({
+            showApiStatusSuccess: true,
+            showApiStatusError: false
+          });
           return res.json();
         }
         console.log("API invocation is not successful ", res.status);
-        this.setState({ showGraph: false });
+        this.setState({
+          showGraph: false,
+          showApiStatusError: true,
+          showApiStatusSuccess: false
+        });
         throw new Error(
           "Network response was not ok: "
             .concat(res.status)
@@ -156,7 +172,9 @@ class Search extends React.Component {
           <Col sm>
             <Jumbotron className="bg-white">
               <h3>
-                <p className="text-center">Seach COVID19 stats by country? try below!</p>
+                <p className="text-center">
+                  Seach COVID19 stats by country? try below!
+                </p>
               </h3>
             </Jumbotron>
           </Col>
@@ -180,10 +198,38 @@ class Search extends React.Component {
         </Row>
         <br />
         <Row>
-          {this.state.showApiStatus && (
+          {this.state.showApiStatusSuccess && (
             <Col sm>
               <div className="text-center">
-                API Response Code - {this.state.apiResponseCode}
+                <Alert variant="success">
+                  <Alert.Heading>Oh great :) You got the data</Alert.Heading>
+                  <p>
+                    API response code -{this.state.apiResponseCode}, Response
+                    Time - {this.state.apiResponseTime} ms
+                    <br />
+                    Did you know, that you just consumed <strong>AWS Serverless Components</strong>?
+                  </p>
+                </Alert>
+              </div>
+            </Col>
+          )}
+          {this.state.showApiStatusError && (
+            <Col sm>
+              <div className="text-center">
+                <Alert
+                  variant="danger"
+                  onClose={() => this.setState({ showApiStatusError: false })}
+                  dismissible
+                >
+                  <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                  <p>
+                    API response code -{this.state.apiResponseCode}, Response
+                    Time - {this.state.apiResponseTime} ms
+                    <br />
+                    Try with a different country or tap on{" "}
+                    <strong>Clear</strong> button to reset
+                  </p>
+                </Alert>
               </div>
             </Col>
           )}
