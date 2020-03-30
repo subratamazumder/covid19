@@ -64,7 +64,7 @@ def is_date(string):
 
 
 """
-Form a dynamo row strcuture as 
+Form a dynamo row strcuture as
 [('country', 'india'),( rec_type ,123)]
 """
 
@@ -86,28 +86,36 @@ Return rec_type as total_confirmed or total_deaths or total_recovered
 def get_rec_type(file_name):
     return REC_TYPE_DICT[file_name]
 
-def get_total_deaths(all_db_record,country):
+
+def get_total_deaths(all_db_record, country):
    unique_deaths_key = "{}#{}".format(country, 'total_deaths')
    if unique_deaths_key in all_db_record:
       return all_db_record[unique_deaths_key]
    else:
       return 0
-def get_total_confirmed(all_db_record,country):
+
+
+def get_total_confirmed(all_db_record, country):
    unique_confirmed_key = "{}#{}".format(country, 'total_confirmed')
    if unique_confirmed_key in all_db_record:
       return all_db_record[unique_confirmed_key]
    else:
       return 0
-def get_total_recovered(all_db_record,country):
+
+
+def get_total_recovered(all_db_record, country):
    unique_recovered_key = "{}#{}".format(country, 'total_recovered')
    if unique_recovered_key in all_db_record:
       return all_db_record[unique_recovered_key]
    else:
       return 0
+
+
 def prepare_data_record(file_name):
     all_data_record = {}
     country_list = []
-    count = 0 
+    count = 0
+    total_latest_global = 0
     rec_type = get_rec_type(file_name)
     file_path = get_file_path(file_name)
     with open(file_path) as csvfile:
@@ -115,25 +123,28 @@ def prepare_data_record(file_name):
             count = count + 1
             country = csv_line["Country/Region"]
             unique_key = "{}#{}".format(country, rec_type)
+            curr_latest = 0
             # logger.info("unique_key-{}".format(unique_key))
-            if unique_key in all_data_record: #If Same country already counted before then add it up
+            if unique_key in all_data_record:  # If Same country already counted before then add it up
                curr_latest = all_data_record[unique_key]
-               new_latest = curr_latest + get_latest(csv_line)
+               # logger.info("curr_latest-{}".format(curr_latest))
+               curr_latest = curr_latest + get_latest(csv_line)
                # logger.info("curr_latest-{}, new_latest-{}".format(curr_latest,new_latest))
-               all_data_record[unique_key] = new_latest
+               all_data_record[unique_key] = curr_latest
             else:
-               all_data_record[unique_key] = get_latest(csv_line)
+               curr_latest = get_latest(csv_line)
+               all_data_record[unique_key] = curr_latest
                country_list.append(country)
+            total_latest_global = total_latest_global + curr_latest
     logger.info(
-        "Toltal number of record prepared is -{}".format(count))
-    return all_data_record, country_list 
+        "Toltal number of record prepared is -{}, total_latest_global is - {}".format(count,total_latest_global))
+    return all_data_record, country_list, total_latest_global
 
 
 def write_to_dynamo(db_record_list):
     count = 0
     for each_rec in db_record_list:
             count = count + 1
-            # Apend to bigger dictionary
             dynamo_put_item(COVD19_DYNAMO_TABLE, each_rec)
             # if count == 1:
             #     break
@@ -147,14 +158,14 @@ Fill a big dic with all data and then write it once
 
 def dynamo_put_item(table_name, record):
     try:
-        logger.info("Puting Dynamo record as-{}".format(record))
+        # logger.info("Puting Dynamo record as-{}".format(record))
         if record['country'] is not None:
             dynamo_table = dynamodb.Table(table_name)
             dynamo_table.put_item(
                 Item=record
             )
         else:
-            logger.info("Invalid data ignoring record")
+            logger.info("Invalid data ignoring record-{}".format(record))
     except Exception as e:
         logger.info(e)
         logger.info(traceback.print_exc())
@@ -179,11 +190,18 @@ def store_covid19_data(file_name):
     download_s3_file(COVD19_DATA_FILE_CONFIRMED)
     download_s3_file(COVD19_DATA_FILE_DEATHS)
     download_s3_file(COVD19_DATA_FILE_RECOVERED)
-    covid19_confirmed_data, covid19_confirmed_country_list = prepare_data_record(COVD19_DATA_FILE_CONFIRMED)
-    covid19_deaths_data, covid19_deaths_country_list = prepare_data_record(COVD19_DATA_FILE_DEATHS)
-    covid19_recovered_data, covid19_recovered_country_list = prepare_data_record(COVD19_DATA_FILE_RECOVERED)
+    covid19_confirmed_data, covid19_confirmed_country_list, total_confirmed_global = prepare_data_record(COVD19_DATA_FILE_CONFIRMED)
+    covid19_deaths_data, covid19_deaths_country_list, total_deaths_global = prepare_data_record(COVD19_DATA_FILE_DEATHS)
+    covid19_recovered_data, covid19_recovered_country_list, total_recovered_global = prepare_data_record(COVD19_DATA_FILE_RECOVERED)
     write_to_dynamo(prepare_db_record(covid19_confirmed_country_list,ChainMap(covid19_confirmed_data,covid19_deaths_data,covid19_recovered_data)))
-
+    # update global latest
+    dynamo_put_item(COVD19_DYNAMO_TABLE, dict([
+        ('country', 'GLOBAL'),
+        ('total_confirmed',total_confirmed_global),
+        ('total_deaths',total_deaths_global),
+        ('total_recovered',total_recovered_global),
+        ('last_updated',get_last_updated_ts())
+        ]))
 def lambda_handler(event, context):
     logger.info("Received event: " + json.dumps(event, indent=2))
     try:
