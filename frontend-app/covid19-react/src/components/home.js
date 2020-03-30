@@ -8,6 +8,7 @@ import Alert from "react-bootstrap/Alert";
 import Image from "react-bootstrap/Image";
 import Preface from "./preface";
 import Search from "./search";
+import GlobalGraph from "./global-graph";
 class HomePage extends React.Component {
   render() {
     return (
@@ -46,6 +47,11 @@ class HomePage extends React.Component {
         </Row>
         <Row>
           <Col sm>
+            <GlobalGraph></GlobalGraph>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm>
             <Search></Search>
           </Col>
         </Row>
@@ -57,8 +63,9 @@ class HomePage extends React.Component {
             <Alert variant="info" className="text-center">
               <h5>
                 <i>
-                  Disclaimer : Near realtime COVID19 Stats data to this Application is fetched
-                  from{" "}
+                  Disclaimer : <br />
+                  Near realtime COVID19 Stats Data to this Application is
+                  fetched from{" "}
                   <a href="https://github.com/CSSEGISandData/COVID-19">
                     public data
                   </a>{" "}
@@ -66,6 +73,8 @@ class HomePage extends React.Component {
                   <a href="https://systems.jhu.edu/research/public-health/ncov/">
                     Johns Hopkins CSSE
                   </a>
+                  <br/>
+                  Country flags are loaded from <a href="https://react.semantic-ui.com/elements/flag/">semantic-ui</a>
                 </i>
               </h5>
             </Alert>

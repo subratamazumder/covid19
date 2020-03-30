@@ -139,6 +139,7 @@ class Search extends React.Component {
               .concat(this.state.country)
               .concat(" updated at ")
               .concat(jsonObj.last_updated)
+              .concat(" UTC")
           }
         });
         //enable graphs
