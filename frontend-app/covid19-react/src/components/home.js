@@ -57,9 +57,15 @@ class HomePage extends React.Component {
             <Alert variant="info" className="text-center">
               <h5>
                 <i>
-                  <q>
-                  Disclaimer : COVID19 Stats sata to this Application is supplied by <a href="https://github.com/CSSEGISandData/COVID-19">public data</a> managed by <a href="https://systems.jhu.edu/research/public-health/ncov/">Johns Hopkins CSSE</a>
-                  </q>
+                  Disclaimer : Near realtime COVID19 Stats data to this Application is fetched
+                  from{" "}
+                  <a href="https://github.com/CSSEGISandData/COVID-19">
+                    public data
+                  </a>{" "}
+                  managed by{" "}
+                  <a href="https://systems.jhu.edu/research/public-health/ncov/">
+                    Johns Hopkins CSSE
+                  </a>
                 </i>
               </h5>
             </Alert>

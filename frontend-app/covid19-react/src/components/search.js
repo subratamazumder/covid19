@@ -1,7 +1,8 @@
 import React from "react";
 import { Row, Col, Button } from "react-bootstrap";
+import Jumbotron from "react-bootstrap/Jumbotron";
 import { Dropdown } from "semantic-ui-react";
-import Graph from "./graph";
+import Plot from "react-plotly.js";
 import {
   API_METERING_ID,
   API_ENDPONIT_STAT_BY_COUNTRY,
@@ -23,7 +24,11 @@ class Search extends React.Component {
       lastUpdated: "",
       apiResponseCode: 0,
       showApiStatus: false,
-      charCount: 0
+      charCount: 0,
+      graphData: [],
+      graphLayout: {},
+      graphFrames: [],
+      graphConfig: {}
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.clearData = this.clearData.bind(this);
@@ -62,7 +67,11 @@ class Search extends React.Component {
       totalDeath: 0,
       totalRecovered: 0,
       lastUpdated: "",
-      charCount: 0
+      charCount: 0,
+      graphData: [],
+      graphLayout: {},
+      graphFrames: [],
+      graphConfig: {}
     });
   };
   searchByCountry = event => {
@@ -99,7 +108,38 @@ class Search extends React.Component {
           totalInfected: jsonObj.total_confirmed,
           totalRecovered: jsonObj.total_recovered,
           totalDeath: jsonObj.total_deaths,
-          lastUpdated: jsonObj.last_updated
+          lastUpdated: jsonObj.last_updated,
+          graphData: [
+            {
+              x: [
+                "Infected(".concat(jsonObj.total_confirmed).concat(")"),
+                "Deaths(".concat(jsonObj.total_deaths).concat(")"),
+                "Recovered(".concat(jsonObj.total_recovered).concat(")")
+              ],
+              y: [
+                jsonObj.total_confirmed,
+                jsonObj.total_deaths,
+                jsonObj.total_recovered
+              ],
+              type: "bar",
+              marker: {
+                color: [
+                  "rgba(30,144,255,1)",
+                  "rgba(222,45,38,0.8)",
+                  "rgba(50,205,50,1)"
+                ]
+              }
+            }
+          ],
+          graphLayout: {
+            // width: 500,
+            // height: 500,
+            autosize: true,
+            title: "COVID19 Stats For "
+              .concat(this.state.country)
+              .concat(" updated at ")
+              .concat(jsonObj.last_updated)
+          }
         });
         //enable graphs
         console.log("Enbaling covid graph for-", this.state.country);
@@ -110,11 +150,15 @@ class Search extends React.Component {
   render() {
     return (
       <div id="search">
-        {/* <Row>
-          <Col cm>
-            Seach COVID19 Stats by Country
+        <Row>
+          <Col sm>
+            <Jumbotron className="bg-white">
+              <h3>
+                <p className="text-center">Seach COVID19 stats by country? try below!</p>
+              </h3>
+            </Jumbotron>
           </Col>
-        </Row> */}
+        </Row>
         <Row>
           <Col sm>
             <Dropdown
@@ -173,12 +217,13 @@ class Search extends React.Component {
               sstyle={{ width: "100%", height: "100%" }}
             >
               {this.state.showGraph && (
-                <Graph
-                  country={this.state.selected}
-                  totalInfected={this.state.totalInfected}
-                  totalDeath={this.state.totalDeath}
-                  totalRecovered={this.state.totalRecovered}
-                  lastUpdated={this.state.lastUpdated}
+                <Plot
+                  data={this.state.graphData}
+                  layout={this.state.graphLayout}
+                  // frames={this.state.graphFrames}
+                  config={this.state.graphConfig}
+                  onInitialized={figure => this.setState(figure)}
+                  onUpdate={figure => this.setState(figure)}
                 />
               )}
             </div>

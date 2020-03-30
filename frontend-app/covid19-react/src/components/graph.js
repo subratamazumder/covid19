@@ -1,6 +1,6 @@
 import React from "react";
 import Plot from "react-plotly.js";
-
+// ******** NOT USED YET, STATEMANAGEMENT BETWEEN CHILD & PARENT COMPONENT NEEDS FIX ********
 class Graph extends React.Component {
   constructor(props) {
     super(props);
