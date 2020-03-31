@@ -74,7 +74,7 @@ class HomePage extends React.Component {
                     Johns Hopkins CSSE
                   </a>
                   <br/>
-                  Country flags are loaded from <a href="https://react.semantic-ui.com/elements/flag/">semantic-ui</a>, apologies if not appropriate|
+                  Country flags are loaded from <a href="https://react.semantic-ui.com/elements/flag/">semantic-ui</a>, apologies if not appropriate!
                 </i>
               </h5>
             </Alert>
