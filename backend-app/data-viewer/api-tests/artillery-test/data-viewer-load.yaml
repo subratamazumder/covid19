@@ -1,0 +1,33 @@
+config:
+  plugins:
+    expect: {}
+  target: 'https://azurns8496.execute-api.ap-south-1.amazonaws.com'
+  phases:
+    - duration: 1
+      arrivalRate: 1
+  defaults:
+    headers:
+      x-api-key: 'to-be-replaced-by-invoker-script'
+      Accept: 'application/json'
+  variables:
+    country:
+      - India
+      - Italy
+      - China
+      - Spain
+      - UnitedKingdom
+      - US
+      - Pakistan
+      - Australia
+      - Argentina
+      - Belgium
+      - Mexico
+      - Netherlands
+      - Russia
+scenarios:
+  - flow:
+    - get:
+        url: "/test/covid19/countries/{{ country }}/latest"
+        expect:
+            - statusCode: 200
+            - contentType: json
