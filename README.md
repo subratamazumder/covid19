@@ -13,7 +13,7 @@ This function's sole responsibility is to read csv data from Johns Hopkins CSSE 
 #### Data Loader
 This lambda gets triggered as soon a new data file gets loaded in AWS S3 bucket. Once triggered it will download csv data files, parse it and writes into a AWS DynamoDB No-SQL table. (Note- current version of this application, this function gets triggered via AWS Cloud Watch event. I am on it!)
 
-#### 3. Data Viewer
+#### Data Viewer
 This Lambda which is exposed via AWS API Gateway over HTTP scans AWS DynamoDB table based on partition key (country) and supply data to website to process further in sub milliseconds time.
 
 ##### /covid19/countries/latest - TBC
@@ -39,7 +39,8 @@ x-amzn-trace-id: Root=1-5e823fbe-bb6e7eec66873a61d5daed6a
     "total_deaths": 27,
     "total_recovered": 95,
     "country": "INDIA",
-    "
+    "total_confirmed": 1024
+}
 ```
 
 ##### /covid19/countries/`{countryCd}`/`{date}` - TBC
@@ -47,7 +48,7 @@ x-amzn-trace-id: Root=1-5e823fbe-bb6e7eec66873a61d5daed6a
 Get latest covid19 status for a country on a given date
 
 #### Website
-This is a react-bootstrap based UI component which makes API calls to search COVID-19 stats based on country & visualise data graphically using plotly-react.
+This is a [react-bootstrap](https://react-bootstrap.github.io/) based UI component which makes API calls to search COVID-19 stats based on country & visualise data graphically using [plotly-react](https://plotly.com/javascript/react/).
 
 #### Other Components
 Other than above mentioned AWS services there are many other key services which has been utilised here as well.
@@ -67,13 +68,21 @@ Another significant dev challenge was to deploy heavy lambda with many py-libs (
 
 ### Reference
 https://react.semantic-ui.com/modules/dropdown/#types-search-selection
+
 https://www.valentinog.com/blog/await-react/
+
 https://dzone.com/articles/consuming-rest-api-with-reactjs
+
 https://medium.com/@stephinmon.antony/aws-lambda-with-python-example-inserting-data-into-dynamodb-table-from-s3-7c4ea10a3efb
+
 https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-function-schedule.html#sam-function-schedule-enabled
+
 https://forums.aws.amazon.com/thread.jspa?threadID=242093
+
 https://stackoverflow.com/questions/54320336/aws-api-gateway-working-through-curl-but-not-working-through-javascript
+
 https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+
 https://enable-cors.org/server_awsapigateway.html
 
 #### Contributing
