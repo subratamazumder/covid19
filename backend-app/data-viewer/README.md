@@ -17,3 +17,8 @@ $ ./run-load-test.sh <api-key> <duration> <arrivalRate>
 ```
 # Reference
 https://artillery.io/docs/cli-reference/
+
+https://artillery.io/docs/examples/
+
+https://artillery.io/docs/plugin-expectations-assertions/
+
