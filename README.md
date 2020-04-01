@@ -85,6 +85,39 @@ https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
 
 https://enable-cors.org/server_awsapigateway.html
 
+#### Setup Instruction
+#### Deploy Backend Componenets
+##### Deploy S3 Bucket
+```console
+cd backend-app/s3-bucket/
+./deploy-bucket.sh
+```
+##### Deploy DynamoDB Table
+```console
+cd backend-app/dynamo-db/
+./deploy-table.sh
+```
+##### Deploy Data Retriever
+```console
+cd backend-app/data-viewer/covid19-data-viewer-function
+./deploy.sh
+```
+##### Deploy Data Loader
+```console
+cd backend-app/data-viewer/covid19-data-viewer-function
+./deploy.sh
+```
+##### Deploy Data Viewer
+```console
+cd backend-app/data-viewer/covid19-data-viewer-function
+./deploy.sh
+```
+#### Deploy Front End Componenets
+### Test Instruction
+#### Acceptance Test
+TBC
+#### Load Test
+
 #### Contributing
  There are couple of issues & enhancement has been identified under [issues](https://github.com/subratamazumder/covid19/issues), feel free to raise PR :+1: or raise new issues to work upon.
 
