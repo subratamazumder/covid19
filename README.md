@@ -117,7 +117,7 @@ cd backend-app/data-viewer/covid19-data-viewer-function
 #### Acceptance Test
 TBC
 #### Load Test
-[load-test-instruction](covid19/data-viewer/api-tests/README.md)
+[load-test-instruction](data-viewer/README.md)
 #### Contributing
  There are couple of issues & enhancement has been identified under [issues](https://github.com/subratamazumder/covid19/issues), feel free to raise PR :+1: or raise new issues to work upon.
 
