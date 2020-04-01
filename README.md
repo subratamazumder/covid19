@@ -99,12 +99,12 @@ cd backend-app/dynamo-db/
 ```
 ##### Deploy Data Retriever
 ```console
-cd backend-app/data-viewer/covid19-data-viewer-function
+cd backend-app/data-retriever/covid19-data-retriever-function
 ./deploy.sh
 ```
 ##### Deploy Data Loader
 ```console
-cd backend-app/data-viewer/covid19-data-viewer-function
+cd backend-app/data-loader/covid19-data-loader-function
 ./deploy.sh
 ```
 ##### Deploy Data Viewer
