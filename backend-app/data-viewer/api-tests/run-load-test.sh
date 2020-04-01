@@ -22,7 +22,10 @@ export OVERRIDE_JSON_TEMPLATE='{ "config": { "phases": [ { "duration": #DURATION
 export OVERRIDE_JSON=${OVERRIDE_JSON_TEMPLATE//#API_KEY#/$API_KEY}
 export OVERRIDE_JSON=${OVERRIDE_JSON//#DURATION#/$DURATION}
 export OVERRIDE_JSON=${OVERRIDE_JSON//#ARRIVAL_RATE#/$ARRIVAL_RATE}
-echo $OVERRIDE_JSON
+#echo $OVERRIDE_JSON
+export LOAD_TEST_REPORT_DATA=report.json
+export LOAD_TEST_REPORT=report
 #DEBUG=http:request artillery run --overrides '{"config": {"phases": [{"duration": 2, "arrivalRate": 1}]}}' artillery-test/data-viewer-load.yaml
 #DEBUG=http:response artillery run --overrides "$OVERRIDE_JSON" artillery-test/data-viewer-load.yaml
-# artillery run --overrides "$OVERRIDE_JSON" artillery-test/data-viewer-load.yaml
+artillery run -o $LOAD_TEST_REPORT_DATA --overrides "$OVERRIDE_JSON" artillery-test/data-viewer-load.yaml
+artillery report $LOAD_TEST_REPORT_DATA

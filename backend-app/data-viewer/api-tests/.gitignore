@@ -1,0 +1,2 @@
+#Ignore load test reports
+report.json*

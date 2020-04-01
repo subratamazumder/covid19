@@ -13,7 +13,8 @@ $ sudo npm install -g artillery-plugin-expect
 $ cd covid19/backend-app/data-viewer/api-tests
 
 $ ./run-load-test.sh <api-key> <duration> <arrivalRate>
-
+<api-key> is must, if <duration> & <arrivalRate> not supplied then gets defaukted by script
+html reports gets generated on each run
 ```
 # Reference
 https://artillery.io/docs/cli-reference/
