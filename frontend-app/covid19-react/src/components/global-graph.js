@@ -90,7 +90,7 @@ class GlobalGraph extends React.Component {
   }
   render() {
     return (
-      <div className="text-center" sstyle={{ width: "100%", height: "100%" }}>
+      <div className="text-center" sstyle={{ width: "100%", height: "100%" }} disabled>
         {this.state.showGraph && (
           <Plot
             data={this.state.graphData}
@@ -99,6 +99,7 @@ class GlobalGraph extends React.Component {
             config={this.state.graphConfig}
             onInitialized={figure => this.setState(figure)}
             onUpdate={figure => this.setState(figure)}
+            useResizeHandler={true}
           />
         )}
       </div>
