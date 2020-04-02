@@ -30,7 +30,7 @@ class Search extends React.Component {
       graphData: [],
       graphLayout: {},
       graphFrames: [],
-      graphConfig: {}
+      graphConfig: { displayModeBar: false, editable: false }
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.clearData = this.clearData.bind(this);
@@ -75,7 +75,7 @@ class Search extends React.Component {
       graphData: [],
       graphLayout: {},
       graphFrames: [],
-      graphConfig: {}
+      graphConfig: { displayModeBar: false, editable: false, responsive: true }
     });
   };
   searchByCountry = event => {
@@ -207,7 +207,8 @@ class Search extends React.Component {
                     API response code -{this.state.apiResponseCode}, Response
                     Time - {this.state.apiResponseTime} ms
                     <br />
-                    Did you know, that you just consumed <strong>AWS Serverless Components</strong>?
+                    Did you know, that you just consumed{" "}
+                    <strong>AWS Serverless Components</strong>?
                   </p>
                 </Alert>
               </div>

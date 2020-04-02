@@ -14,7 +14,11 @@ class GlobalGraph extends React.Component {
       graphData: [],
       graphLayout: {},
       graphFrames: [],
-      graphConfig: {}
+      graphConfig: {
+        displayModeBar: false,
+        editable: false,
+        responsive: true
+      }
     };
   }
   async componentDidMount() {
@@ -76,10 +80,12 @@ class GlobalGraph extends React.Component {
           graphLayout: {
             // width: 500,
             // height: 500,
-            autosize: true,
+            // autosize: true,
             title: "Global COVID19 Stats updated at "
               .concat(jsonObj.last_updated)
-              .concat(" UTC")
+              .concat(" UTC"),
+            dragmode: "pan",
+            font: {family: "Open Sans"}
           }
         });
         //enable graphs
@@ -90,16 +96,20 @@ class GlobalGraph extends React.Component {
   }
   render() {
     return (
-      <div className="text-center" sstyle={{ width: "100%", height: "100%" }} disabled>
+      <div
+        className="text-center"
+        // sstyle={{ width: "100%", height: "100%" }}
+        // disabled
+      >
         {this.state.showGraph && (
           <Plot
             data={this.state.graphData}
             layout={this.state.graphLayout}
             frames={this.state.graphFrames}
             config={this.state.graphConfig}
-            onInitialized={figure => this.setState(figure)}
-            onUpdate={figure => this.setState(figure)}
-            useResizeHandler={true}
+            // onInitialized={figure => this.setState(figure)}
+            // onUpdate={figure => this.setState(figure)}
+            // useResizeHandler={true}
           />
         )}
       </div>
