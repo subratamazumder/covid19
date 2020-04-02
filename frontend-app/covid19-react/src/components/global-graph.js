@@ -85,7 +85,9 @@ class GlobalGraph extends React.Component {
               .concat(jsonObj.last_updated)
               .concat(" UTC"),
             dragmode: "pan",
-            font: {family: "Open Sans"}
+            font: {family: "Open Sans"},
+            yaxis: {fixedrange: true},
+            xaxis : {fixedrange: true}
           }
         });
         //enable graphs
