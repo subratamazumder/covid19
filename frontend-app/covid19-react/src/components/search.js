@@ -146,7 +146,7 @@ class Search extends React.Component {
                   "rgba(50,205,50,1)"
                 ],
                 line: {
-                  width: 2.5
+                  width: 1
                 }
               }
             }
