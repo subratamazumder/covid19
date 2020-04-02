@@ -156,7 +156,11 @@ class Search extends React.Component {
               .concat(this.state.country)
               .concat(" updated at ")
               .concat(jsonObj.last_updated)
-              .concat(" UTC")
+              .concat(" UTC"),
+            dragmode: false,
+            font: { family: "Open Sans" },
+            yaxis: { fixedrange: true },
+            xaxis: { fixedrange: true }
           }
         });
         //enable graphs

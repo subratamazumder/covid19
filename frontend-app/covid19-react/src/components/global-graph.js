@@ -84,7 +84,7 @@ class GlobalGraph extends React.Component {
             title: "Global COVID19 Stats updated at "
               .concat(jsonObj.last_updated)
               .concat(" UTC"),
-            dragmode: "pan",
+            dragmode: false,
             font: {family: "Open Sans"},
             yaxis: {fixedrange: true},
             xaxis : {fixedrange: true}
