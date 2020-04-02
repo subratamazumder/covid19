@@ -73,7 +73,10 @@ class GlobalGraph extends React.Component {
                   "rgba(30,144,255,1)",
                   "rgba(222,45,38,0.8)",
                   "rgba(50,205,50,1)"
-                ]
+                ],
+                line: {
+                  width: 2.5
+                }
               }
             }
           ],
@@ -85,9 +88,9 @@ class GlobalGraph extends React.Component {
               .concat(jsonObj.last_updated)
               .concat(" UTC"),
             dragmode: false,
-            font: {family: "Open Sans"},
-            yaxis: {fixedrange: true},
-            xaxis : {fixedrange: true}
+            font: { family: "Open Sans" },
+            yaxis: { fixedrange: true },
+            xaxis: { fixedrange: true }
           }
         });
         //enable graphs
