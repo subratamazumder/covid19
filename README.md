@@ -97,6 +97,13 @@ cd backend-app/s3-bucket/
 cd backend-app/dynamo-db/
 ./deploy-table.sh
 ```
+##### Deploy Lambda Layers
+```console
+cd backend-app/lambda-layers/python-request-layer
+./publish-layer.sh
+cd backend-app/lambda-layers/python-xray-layer
+./publish-layer.sh
+```
 ##### Deploy Data Retriever
 ```console
 cd backend-app/data-retriever/covid19-data-retriever-function
