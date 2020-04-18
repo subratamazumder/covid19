@@ -215,7 +215,7 @@ class Search extends React.Component {
                     Time - {this.state.apiResponseTime} ms
                     <br />
                     Did you know, that you just consumed{" "}
-                    <strong>AWS Serverless Components</strong>?
+                    <strong><a href="https://aws.amazon.com/serverless/">AWS Serverless Components</a></strong>?
                   </p>
                 </Alert>
               </div>
