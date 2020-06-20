@@ -4,6 +4,9 @@ import os
 from zipfile import ZipFile
 import boto3
 import botocore
+from botocore.config import Config
+
+config = Config(connect_timeout=10, read_timeout=10)
 
 CONFIG = botocore.config.Config(retries={'max_attempts': 0})
 LAMBDA_ZIP = './lambda.zip'
@@ -21,20 +24,21 @@ def get_lambda_client():
         config=CONFIG
     )
 
-
 def get_dynamo_client():
     return boto3.client(
         'dynamodb',
         aws_access_key_id='local-key',
         aws_secret_access_key='local-secret',
         region_name='local',
-        endpoint_url=LOCALSTACK_ENDPOINT
+        endpoint_url=LOCALSTACK_ENDPOINT,
+        config= config
+
     )
 
 
 def create_lambda_zip(function_name):
     with ZipFile(LAMBDA_ZIP, 'w') as z:
-        z.write(function_name + '.py')
+        z.write('app' + '.py')
 
 
 def create_lambda(function_name):
@@ -46,12 +50,13 @@ def create_lambda(function_name):
         FunctionName=function_name,
         Runtime='python3.7',
         Role='role',
-        Handler=function_name + '.handler',
+        Timeout=10,
+        Handler='app.lambda_handler',
         Code=dict(ZipFile=zipped_code),
         Environment={
             "Variables": {
                 "DEPLOYED_ENV": "local",
-                "DYNAMO_TABLE": DYNAMO_TABLE
+                "COVD19_DYNAMO_TABLE": DYNAMO_TABLE
             }
         }
     )
@@ -69,8 +74,10 @@ def invoke_function_and_get_message(function_name):
     lambda_client = get_lambda_client()
     response = lambda_client.invoke(
         FunctionName=function_name,
-        InvocationType='RequestResponse'
+        InvocationType='RequestResponse',
+        Payload='{\"country\":\"India\"}'
     )
+    print(response)
     return json.loads(
         response['Payload']
         .read()
@@ -90,7 +97,7 @@ def create_table(table_name):
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'year',
+                'AttributeName': 'country',
                 'AttributeType': 'N'
             }
         ],

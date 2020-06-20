@@ -4,16 +4,12 @@ import boto3
 import logging
 import os
 import traceback
-from aws_xray_sdk.core import xray_recorder
-from aws_xray_sdk.core import patch_all
-import requests
 import csv
 import decimal
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 from collections import ChainMap
 from dateutil.parser import parse
-patch_all()
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

@@ -1,10 +1,17 @@
-from unit import app
-import json, os
+# from unit import app
+import json
+import os
 import pytest
-import testutils
+from unit import testutils
+from datetime import datetime
 
 DYNAMO_TABLE = 'covid-19-local-db'
-
+FUNCTION_NAME = 'app'
+country = 'India'
+total_confirmed = 123
+total_deaths = 124
+total_recovered = 125
+last_updated_ts = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
 @pytest.fixture()
 def apigw_event():
     """ Generates API GW Event"""
@@ -66,19 +73,43 @@ def apigw_event():
 def setup_class(cls):
     print('\r\nSetting up the class')
     os.environ['DEPLOYED_ENV'] = 'local'
-    testutils.create_lambda('lambda')
+    testutils.create_lambda(FUNCTION_NAME)
     testutils.create_table(DYNAMO_TABLE)
+    testutils.insert_record(DYNAMO_TABLE,
+        dict([
+            ('country', country),
+            ('total_confirmed', total_confirmed),
+            ('total_deaths', total_deaths),
+            ('total_recovered', total_recovered),
+            ('last_updated', last_updated_ts)
+        ])
+    )
 
 
 @classmethod
 def teardown_class(cls):
     print('\r\nTearing down the class')
-    testutils.delete_lambda('lambda')
+    testutils.delete_lambda(FUNCTION_NAME)
     testutils.delete_table(DYNAMO_TABLE)
 
+def setup():
+    print('\r\nSetting up the class')
+    os.environ['DEPLOYED_ENV']='local'
+    testutils.create_lambda(FUNCTION_NAME)
+    testutils.create_table(DYNAMO_TABLE)
+
+
+def teardown():
+    print('\r\nTearing down the class')
+    testutils.delete_lambda(FUNCTION_NAME)
+    testutils.delete_table(DYNAMO_TABLE)
 
 def test_lambda_handler(apigw_event, mocker):
-    print ("hello")
+    # try:
+    #     setup()
+    # finally:
+    #     teardown()
+    print("hello")
     # ret = app.lambda_handler(apigw_event, "")
     # data = json.loads(ret["body"])
 
@@ -86,3 +117,4 @@ def test_lambda_handler(apigw_event, mocker):
     # assert "message" in ret["body"]
     # assert data["message"] == "hello world"
     # assert "location" in data.dict_keys()
+    print(testutils.invoke_function_and_get_message(FUNCTION_NAME))
