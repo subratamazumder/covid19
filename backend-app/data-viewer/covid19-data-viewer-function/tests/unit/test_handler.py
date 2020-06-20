@@ -1,12 +1,13 @@
-# from unit import app
 import json
 import os
 import pytest
 from unit import testutils
 from datetime import datetime
+import string 
+import random
 
 DYNAMO_TABLE = 'covid-19-local-db'
-FUNCTION_NAME = 'app'
+FUNCTION_NAME = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 5))
 country = 'India'
 total_confirmed = 123
 total_deaths = 124
@@ -68,16 +69,20 @@ def apigw_event():
         "path": "/examplepath",
     }
 
-
-@classmethod
-def setup_class(cls):
-    print('\r\nSetting up the class')
+def setup():
+    print('\r\nSetting up..')
     os.environ['DEPLOYED_ENV'] = 'local'
     testutils.create_lambda(FUNCTION_NAME)
     testutils.create_table(DYNAMO_TABLE)
+    # testutils.list_dynamo_table()
     testutils.insert_record(DYNAMO_TABLE,
+    # {'country':
+    #     {
+    #         'S':'India'
+    #     }
+    # }
         dict([
-            ('country', country),
+            ('country', country.upper()),
             ('total_confirmed', total_confirmed),
             ('total_deaths', total_deaths),
             ('total_recovered', total_recovered),
@@ -85,36 +90,11 @@ def setup_class(cls):
         ])
     )
 
-
-@classmethod
-def teardown_class(cls):
-    print('\r\nTearing down the class')
-    testutils.delete_lambda(FUNCTION_NAME)
-    testutils.delete_table(DYNAMO_TABLE)
-
-def setup():
-    print('\r\nSetting up the class')
-    os.environ['DEPLOYED_ENV']='local'
-    testutils.create_lambda(FUNCTION_NAME)
-    testutils.create_table(DYNAMO_TABLE)
-
-
 def teardown():
-    print('\r\nTearing down the class')
+    print('\r\nTearing down..')
     testutils.delete_lambda(FUNCTION_NAME)
     testutils.delete_table(DYNAMO_TABLE)
 
-def test_lambda_handler(apigw_event, mocker):
-    # try:
-    #     setup()
-    # finally:
-    #     teardown()
-    print("hello")
-    # ret = app.lambda_handler(apigw_event, "")
-    # data = json.loads(ret["body"])
-
-    # assert ret["statusCode"] == 200
-    # assert "message" in ret["body"]
-    # assert data["message"] == "hello world"
-    # assert "location" in data.dict_keys()
-    print(testutils.invoke_function_and_get_message(FUNCTION_NAME))
+def test_that_lambda_handler_retruns_sucess(apigw_event, mocker):
+    lambda_response = testutils.invoke_function_and_get_message(FUNCTION_NAME)
+    assert lambda_response["statusCode"] == 200

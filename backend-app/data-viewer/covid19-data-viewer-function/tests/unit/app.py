@@ -20,7 +20,7 @@ if IS_LOCAL_ENV:
         service_name='dynamodb',
         aws_access_key_id='local_access_key',
         aws_secret_access_key='local_secret_key',
-        endpoint_url='http://localhost:4566'
+        endpoint_url='http://192.168.1.3:4566'
     )
 else:
     dynamodb = boto3.resource('dynamodb')

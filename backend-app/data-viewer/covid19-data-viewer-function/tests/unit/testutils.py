@@ -60,6 +60,7 @@ def create_lambda(function_name):
             }
         }
     )
+    print ("Lambda created")
 
 
 def delete_lambda(function_name):
@@ -68,21 +69,28 @@ def delete_lambda(function_name):
         FunctionName=function_name
     )
     os.remove(LAMBDA_ZIP)
+    print ("Lambda deleted")
 
 
 def invoke_function_and_get_message(function_name):
+    print("Invoking lambda")
+    lambda_payload_request='{\"country\":\"India\"}'
+    print("\r\nLambda request paylaod")
+    print (json.dumps(lambda_payload_request, indent=4, sort_keys=True))
     lambda_client = get_lambda_client()
     response = lambda_client.invoke(
         FunctionName=function_name,
         InvocationType='RequestResponse',
-        Payload='{\"country\":\"India\"}'
+        Payload=lambda_payload_request
     )
-    print(response)
-    return json.loads(
+    lambda_payload_response = json.loads(
         response['Payload']
         .read()
         .decode('utf-8')
     )
+    print("\r\nLambda response paylaod")
+    print (json.dumps(lambda_payload_response, indent=4, sort_keys=True))
+    return lambda_payload_response
 
 
 def create_table(table_name):
@@ -98,7 +106,7 @@ def create_table(table_name):
         AttributeDefinitions=[
             {
                 'AttributeName': 'country',
-                'AttributeType': 'N'
+                'AttributeType': 'S'
             }
         ],
         ProvisionedThroughput={
@@ -106,14 +114,16 @@ def create_table(table_name):
             'WriteCapacityUnits': 10
         }
     )
+    print ("Table created")
     return table
 
 
 def list_dynamo_table():
     dynamo_client = get_dynamo_client()
     dynamo_tables = dynamo_client.list_tables(
-        ExclusiveStartTableName='string',
-        Limit=1)
+        # ExclusiveStartTableName=DYNAMO_TABLE,
+        Limit=2)
+    print ("Table listed")
     print(dynamo_tables)
 
 
@@ -121,10 +131,20 @@ def delete_table(table_name):
     dynamo_client = get_dynamo_client()
     dynamo_client.delete_table(
         TableName=table_name)
+    print ("Table deleted")
+    
 
 
 def insert_record(table_name,record):
-    dynamo_client = get_dynamo_client()
-    dynamo_client.put_item(
-        TableName=table_name,
+    # dynamo_client = get_dynamo_client()
+    dynamodb = boto3.resource(
+        service_name='dynamodb',
+        aws_access_key_id='local_access_key',
+        aws_secret_access_key='local_secret_key',
+        endpoint_url='http://192.168.1.3:4566'
+    )
+    dynamo_table = dynamodb.Table(table_name)
+    dynamo_table.put_item(
+        # TableName=table_name,
         Item=record)
+    print ("Record inserted")

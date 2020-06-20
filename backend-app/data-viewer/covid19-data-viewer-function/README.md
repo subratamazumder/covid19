@@ -104,6 +104,10 @@ pip3 install -U pytest
 
 docker run -it -e DEFAULT_REGION="us-east-1" -e TEST_AWS_ACCOUNT_ID="000000000000" -e SERVICES="lambda,dynamodb" -e LOCALSTACK_HOSTNAME="localhost" -p 4566:4566 --rm --privileged --name localstack_main -p 4569:4569 -p 4586:4586 -p 4574:4574 -p 8080-8081:8080-8081  -v "/private/var/folders/pn/vr3ntrm17rv0rwn55nxrbs9w0000gn/T/localstack:/tmp/localstack" -v "/var/run/docker.sock:/var/run/docker.sock" -e DOCKER_HOST="unix:///var/run/docker.sock" "localstack/localstack"
 
+docker run -it -e DEBUG=1 -e DEFAULT_REGION="us-east-1" -e TEST_AWS_ACCOUNT_ID="000000000000" -e SERVICES="lambda,dynamodb,cloudwatch" -e LOCALSTACK_HOSTNAME="localhost" -e LAMBDA_EXECUTOR="docker" -p 4566:4566 --rm --privileged --name localstack_main -p 4569:4569 -p 4586:4586 -p 4574:4574 -p 8080-8081:8080-8081  -v "/private/var/folders/pn/vr3ntrm17rv0rwn55nxrbs9w0000gn/T/localstack:/tmp/localstack" -v "/var/run/docker.sock:/var/run/docker.sock" -e DOCKER_HOST="unix:///var/run/docker.sock" "localstack/localstack"
+
+awslocal dynamodb get-item --table-name covid-19-local-db --key file://get-item-key-map.json
+
 aws --endpoint-url=http://localhost:4566 dynamodb list-tables --profile=default
 
 awslocal dynamodb create-table --cli-input-json file://dynamo_table.json
