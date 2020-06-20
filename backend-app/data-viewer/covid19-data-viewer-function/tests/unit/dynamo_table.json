@@ -1,0 +1,19 @@
+{
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "country",
+      "AttributeType": "S"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "WriteCapacityUnits": 5,
+    "ReadCapacityUnits": 5
+  },
+  "TableName": "covid-19-local-db",
+  "KeySchema": [
+    {
+      "KeyType": "HASH",
+      "AttributeName": "country"
+    }
+  ]
+}

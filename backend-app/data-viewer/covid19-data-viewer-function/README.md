@@ -100,7 +100,16 @@ You can find more information and examples about filtering Lambda function logs 
 Tests are defined in the `tests` folder in this project. Use PIP to install the [pytest](https://docs.pytest.org/en/latest/) and run unit tests.
 
 ```bash
+pip3 install -U pytest
+
+docker run -it -e DEFAULT_REGION="us-east-1" -e TEST_AWS_ACCOUNT_ID="000000000000" -e SERVICES="lambda,dynamodb" -e LOCALSTACK_HOSTNAME="localhost" -p 4566:4566 --rm --privileged --name localstack_main -p 4569:4569 -p 4586:4586 -p 4574:4574 -p 8080-8081:8080-8081  -v "/private/var/folders/pn/vr3ntrm17rv0rwn55nxrbs9w0000gn/T/localstack:/tmp/localstack" -v "/var/run/docker.sock:/var/run/docker.sock" -e DOCKER_HOST="unix:///var/run/docker.sock" "localstack/localstack"
+
+aws --endpoint-url=http://localhost:4566 dynamodb list-tables --profile=default
+
+awslocal dynamodb create-table --cli-input-json file://dynamo_table.json
+
 covid19-data-retriever-function$ pip install pytest pytest-mock --user
+
 covid19-data-retriever-function$ python -m pytest tests/ -v
 ```
 
