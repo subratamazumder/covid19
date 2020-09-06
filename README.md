@@ -1,3 +1,4 @@
+![GitHub](https://img.shields.io/github/license/subratamazumder/covid19?style=for-the-badge)
 # COVID-19 Global Dashboard 
 
 ## Retrieve Covid-19 near realtime data using a AWS serverless model
