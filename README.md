@@ -1,6 +1,10 @@
 ![GitHub](https://img.shields.io/github/license/subratamazumder/covid19?style=for-the-badge)
 # COVID-19 Global Dashboard 
 
+This has been published on Linkedin as an [article](https://www.linkedin.com/pulse/how-can-you-build-your-own-global-covid19-dashboard-way-mazumder/)
+
+Application is live at https://subratamazumder.github.io/covid19
+
 ## Retrieve Covid-19 near realtime data using a AWS serverless model
 
 ![Design](covid19-design.png)
@@ -131,5 +135,3 @@ TBC
 
 ### NOTE
 Data to this API is supplied by [public data](https://github.com/CSSEGISandData/COVID-19) managed by [Johns Hopkins CSSE](https://systems.jhu.edu/research/public-health/ncov/)
-
-This has been published on Linkedin as an [article](https://www.linkedin.com/pulse/how-can-you-build-your-own-global-covid19-dashboard-way-mazumder/)
