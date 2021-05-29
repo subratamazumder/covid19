@@ -5,8 +5,8 @@ from zipfile import ZipFile
 import boto3
 import botocore
 from botocore.config import Config
-
-config = Config(connect_timeout=10, read_timeout=10)
+MAX_RETRIES = 1
+BOTO3_CONFIG = Config(connect_timeout=10, read_timeout=10, retries={"max_attempts": MAX_RETRIES})
 
 CONFIG = botocore.config.Config(retries={'max_attempts': 0})
 LAMBDA_ZIP = './lambda.zip'
